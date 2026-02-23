@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,7 @@
 #include "pdsch_modulator_impl.h"
 #include "srsran/phy/support/resource_grid_mapper.h"
 #include "srsran/srsvec/bit.h"
-#include "srsran/support/math_utils.h"
+#include "srsran/support/math/math_utils.h"
 
 using namespace srsran;
 
@@ -49,14 +49,13 @@ float pdsch_modulator_impl::modulate(span<ci8_t> d_pdsch, const bit_buffer& b_ha
   return modulator->modulate(d_pdsch, b_hat, modulation);
 }
 
-void pdsch_modulator_impl::map(resource_grid_mapper& mapper,
+void pdsch_modulator_impl::map(resource_grid_writer& grid,
                                span<const ci8_t>     data_re,
                                float                 scaling,
                                const config_t&       config)
 {
-  // Get the PRB allocation mask.
-  const bounded_bitset<MAX_RB> prb_allocation_mask =
-      config.freq_allocation.get_prb_mask(config.bwp_start_rb, config.bwp_size_rb);
+  // Get the common resource block allocation mask.
+  const crb_bitmap crb_allocation_mask = config.freq_allocation.get_crb_mask(config.bwp_start_rb, config.bwp_size_rb);
 
   // First symbol used in this transmission.
   unsigned start_symbol_index = config.start_symbol_index;
@@ -88,7 +87,7 @@ void pdsch_modulator_impl::map(resource_grid_mapper& mapper,
   reserved.merge(dmrs_pattern);
 
   // Set PDSCH allocation pattern.
-  pdsch_pattern.prb_mask = prb_allocation_mask;
+  pdsch_pattern.crb_mask = crb_allocation_mask;
   pdsch_pattern.re_mask  = ~re_prb_mask();
   pdsch_pattern.symbols  = symbols;
   allocation.merge(pdsch_pattern);
@@ -102,10 +101,10 @@ void pdsch_modulator_impl::map(resource_grid_mapper& mapper,
   resource_grid_mapper::symbol_buffer_adapter buffer_adapter(data_re);
 
   // Map into the resource grid.
-  mapper.map(buffer_adapter, allocation, reserved, precoding2);
+  mapper->map(grid, buffer_adapter, allocation, reserved, precoding2);
 }
 
-void pdsch_modulator_impl::modulate(resource_grid_mapper&            mapper,
+void pdsch_modulator_impl::modulate(resource_grid_writer&            grid,
                                     span<const bit_buffer>           codewords,
                                     const pdsch_modulator::config_t& config)
 {
@@ -128,5 +127,5 @@ void pdsch_modulator_impl::modulate(resource_grid_mapper&            mapper,
   float scaling = modulate(pdsch_symbols, b_hat, mod);
 
   // Map resource elements.
-  map(mapper, pdsch_symbols, scaling, config);
+  map(grid, pdsch_symbols, scaling, config);
 }

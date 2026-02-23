@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -44,6 +44,9 @@ public:
 
   /// Connects the PUxCH processor with a notifier.
   virtual void connect(puxch_processor_notifier& notifier) = 0;
+
+  /// Stops the processor.
+  virtual void stop() = 0;
 
   /// \brief Gets the PUxCH processor request handler.
   /// \return A reference to the internal PUxCH processor request handler.

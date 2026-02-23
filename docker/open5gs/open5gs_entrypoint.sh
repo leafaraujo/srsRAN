@@ -1,7 +1,13 @@
 #! /bin/bash
 
-export UE_GATEWAY_IP="${UE_IP_BASE}.1/24"
+export UE_GATEWAY_IP="${UE_IP_BASE}.1"
 export UE_IP_RANGE="${UE_IP_BASE}.0/24"
+
+INSTALL_ARCH=x86_64-linux-gnu
+if [ "$(uname -m)" = "aarch64" ]; then
+    INSTALL_ARCH="aarch64-linux-gnu"
+fi
+export INSTALL_ARCH
 
 envsubst < open5gs-5gc.yml.in > open5gs-5gc.yml
 
@@ -33,11 +39,6 @@ then
     echo "Failed to setup ogstun and routing"
     exit 1
 fi
-
-# Add NAT Rule
-sysctl -w net.ipv4.ip_forward=1
-sysctl -w net.ipv6.conf.all.forwarding=1
-iptables -t nat -A POSTROUTING -s 10.45.0.0/16 ! -o ogstun -j MASQUERADE
 
 # Add subscriber data to open5gs mongo db
 echo "SUBSCRIBER_DB=${SUBSCRIBER_DB}"

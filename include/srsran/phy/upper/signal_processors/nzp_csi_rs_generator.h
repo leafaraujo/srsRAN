@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "srsran/adt/expected.h"
 #include "srsran/adt/static_vector.h"
 #include "srsran/phy/constants.h"
 #include "srsran/phy/support/precoding_configuration.h"
@@ -31,7 +32,7 @@
 
 namespace srsran {
 
-class resource_grid_mapper;
+class resource_grid_writer;
 
 /// Describes a Non-Zero-Power CSI Reference Signal (NZP-CSI-RS) processor interface, in compliance with TS 38.211
 /// Section 7.4.1.5.
@@ -82,9 +83,9 @@ public:
   virtual ~nzp_csi_rs_generator() = default;
 
   /// \brief Generates and maps the NZP-CSI-RS, according to TS 38.211, Section 7.4.1.5.
-  /// \param [out] mapper Resource grid mapper.
+  /// \param [out] writer Resource grid writer interface.
   /// \param [in]  config Required configuration to generate and map the signal.
-  virtual void map(resource_grid_mapper& mapper, const config_t& config) = 0;
+  virtual void map(resource_grid_writer& grid, const config_t& config) = 0;
 };
 
 /// Describes the NZP-CSI-RS generator configuration validator interface.
@@ -95,8 +96,8 @@ public:
   virtual ~nzp_csi_rs_configuration_validator() = default;
 
   /// \brief Validates NZP-CSI-RS generator configuration parameters.
-  /// \return True if the parameters contained in \c config are supported, false otherwise.
-  virtual bool is_valid(const nzp_csi_rs_generator::config_t& config) = 0;
+  /// \return A success if the parameters contained in \c config are supported, an error message otherwise.
+  virtual error_type<std::string> is_valid(const nzp_csi_rs_generator::config_t& config) const = 0;
 };
 
 } // namespace srsran

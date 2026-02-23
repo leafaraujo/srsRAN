@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -89,6 +89,8 @@ public:
   puxch_processor_spy(const puxch_processor_configuration& config_) : config(config_) {}
 
   void connect(puxch_processor_notifier& notifier_) override { notifier = &notifier_; }
+
+  void stop() override {}
 
   puxch_processor_request_handler& get_request_handler() override { return request_handler; }
 

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -21,6 +21,7 @@
  */
 
 #pragma once
+
 #include "../../resource_grid_request_pool.h"
 #include "srsran/adt/circular_array.h"
 #include "srsran/gateways/baseband/buffer/baseband_gateway_buffer_dynamic.h"
@@ -58,6 +59,9 @@ public:
   void connect(puxch_processor_notifier& notifier_) override { notifier = &notifier_; }
 
   // See interface for documentation.
+  void stop() override { stopped = true; }
+
+  // See interface for documentation.
   puxch_processor_request_handler& get_request_handler() override { return *this; }
 
   // See interface for documentation.
@@ -71,6 +75,7 @@ private:
   // See interface for documentation.
   void handle_request(const shared_resource_grid& grid, const resource_grid_context& context) override;
 
+  std::atomic<bool>                        stopped = false;
   unsigned                                 nof_symbols_per_slot;
   unsigned                                 nof_rx_ports;
   puxch_processor_notifier*                notifier = nullptr;

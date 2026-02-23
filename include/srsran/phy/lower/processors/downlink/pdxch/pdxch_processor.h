@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -52,6 +52,9 @@ public:
   /// \brief Gets the PDxCH processor baseband interface.
   /// \return A reference to the internal PDxCH processor baseband interface.
   virtual pdxch_processor_baseband& get_baseband() = 0;
+
+  /// Stops the processor.
+  virtual void stop() = 0;
 };
 
 } // namespace srsran

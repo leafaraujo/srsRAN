@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -21,6 +21,8 @@
  */
 
 #pragma once
+
+#include "../baseband_cfo_processor.h"
 #include "srsran/adt/tensor.h"
 #include "srsran/gateways/baseband/buffer/baseband_gateway_buffer_dynamic.h"
 #include "srsran/phy/lower/processors/uplink/prach/prach_processor.h"
@@ -67,6 +69,13 @@ public:
                puxch_processor_notifier&  puxch_notifier) override;
 
   // See interface for documentation.
+  void stop() override
+  {
+    prach_proc->stop();
+    puxch_proc->stop();
+  }
+
+  // See interface for documentation.
   prach_processor_request_handler& get_prach_request_handler() override;
 
   // See interface for documentation.
@@ -84,6 +93,11 @@ private:
     collecting
   };
 
+  // See interface for documentation.
+public:
+  baseband_cfo_processor& get_cfo_handler() override;
+
+private:
   // See interface for documentation.
   void process(const baseband_gateway_buffer_reader& samples, baseband_gateway_timestamp timestamp) override;
 
@@ -141,6 +155,8 @@ private:
   std::unique_ptr<puxch_processor> puxch_proc;
   /// Uplink processor notifier.
   uplink_processor_notifier* notifier = nullptr;
+  /// Carrier Frequency Offset processor.
+  baseband_cfo_processor cfo_processor;
 };
 
 } // namespace srsran

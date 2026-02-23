@@ -1,8 +1,5 @@
-<div style="display: flex; align-items: center;">
-  <img src="https://docs.srsran.com/projects/project/en/latest/_static/logo.png" width="200px">
-</div>
-
----
+srsRAN Project
+==============
 
 [![Build Status](https://github.com/srsran/srsRAN_Project/actions/workflows/ccpp.yml/badge.svg?branch=main)](https://github.com/srsran/srsRAN_Project/actions/workflows/ccpp.yml)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/7868/badge)](https://www.bestpractices.dev/projects/7868)
@@ -26,13 +23,14 @@ Build Preparation
 
 * Build tools:
   * cmake:               <https://cmake.org/>
-  
 * Mandatory requirements:
   * libfftw:             <https://www.fftw.org/>
   * libsctp:             <https://github.com/sctp/lksctp-tools>
   * yaml-cpp:            <https://github.com/jbeder/yaml-cpp>
   * mbedTLS:             <https://www.trustedfirmware.org/projects/mbed-tls/>
+* Optional requirements:
   * googletest:          <https://github.com/google/googletest/>
+    * You can enable test building by using the cmake option `-DBUILD_TESTING=On`. GoogleTest is only mandatory when building with tests.
 
 You can install the build tools and mandatory requirements for some example distributions with the commands below:
 
@@ -40,7 +38,7 @@ You can install the build tools and mandatory requirements for some example dist
 <summary><strong>Ubuntu 22.04</strong></summary>
 
 ```bash
-sudo apt-get install cmake make gcc g++ pkg-config libfftw3-dev libmbedtls-dev libsctp-dev libyaml-cpp-dev libgtest-dev
+sudo apt-get install cmake make gcc g++ pkg-config libfftw3-dev libmbedtls-dev libsctp-dev libyaml-cpp-dev
 ```
 
 </details>
@@ -48,7 +46,7 @@ sudo apt-get install cmake make gcc g++ pkg-config libfftw3-dev libmbedtls-dev l
 <summary><strong>Fedora</strong></summary>
 
 ```bash
-sudo yum install cmake make gcc gcc-c++ fftw-devel lksctp-tools-devel yaml-cpp-devel mbedtls-devel gtest-devel
+sudo yum install cmake make gcc gcc-c++ fftw-devel lksctp-tools-devel yaml-cpp-devel mbedtls-devel
 ```
 
 </details>
@@ -56,7 +54,7 @@ sudo yum install cmake make gcc gcc-c++ fftw-devel lksctp-tools-devel yaml-cpp-d
 <summary><strong>Arch Linux</strong></summary>
 
 ```bash
-sudo pacman -S cmake make base-devel fftw mbedtls yaml-cpp lksctp-tools gtest
+sudo pacman -S cmake make base-devel fftw mbedtls yaml-cpp lksctp-tools
 ```
 
 </details>
@@ -82,16 +80,20 @@ Download and build srsRAN:
 <details open>
 <summary><strong>Vanilla Installation</strong></summary>
 
+First, clone the srsRAN Project repository:
+
+```bash
+    git clone https://github.com/srsRAN/srsRAN_Project.git
+```
+
 Then build the code-base:
 
 ```bash
-
     cd srsRAN_Project
     mkdir build
     cd build
     cmake ../ 
     make -j $(nproc)
-    make test -j $(nproc)
 ```
 
 You can now run the gNB from ``srsRAN_Project/build/apps/gnb/``. If you wish to install the srsRAN Project gNB, you can use the following command:
@@ -116,7 +118,6 @@ mkdir build
 cd build
 cmake ../ -DENABLE_EXPORT=ON -DENABLE_ZEROMQ=ON
 make -j $(nproc)
-make test -j $(nproc)
 ```
 
 Pay extra attention to the cmake console output. Make sure you read the following line to ensure ZMQ has been correctly detected by srsRAN:
@@ -151,7 +152,6 @@ mkdir build
 cd build
 cmake ../ -DENABLE_DPDK=True -DASSERT_LEVEL=MINIMAL
 make -j $(nproc)
-make test -j $(nproc)
 ```
 
 </details>

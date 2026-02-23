@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include "srsran/adt/concurrent_queue.h"
 #include "srsran/phy/upper/channel_processors/channel_processor_formatters.h"
 #include "srsran/phy/upper/channel_processors/pdsch/pdsch_processor.h"
 #include "srsran/srslog/logger.h"
@@ -48,13 +47,13 @@ public:
   }
 
   // See interface for documentation.
-  void process(resource_grid_mapper&                                        mapper,
-               pdsch_processor_notifier&                                    notifier,
-               static_vector<span<const uint8_t>, MAX_NOF_TRANSPORT_BLOCKS> data,
-               const pdu_t&                                                 pdu) override
+  void process(resource_grid_writer&                                           grid,
+               pdsch_processor_notifier&                                       notifier,
+               static_vector<shared_transport_block, MAX_NOF_TRANSPORT_BLOCKS> data,
+               const pdu_t&                                                    pdu) override
   {
     pdsch_processor& processor = processors->get();
-    return processor.process(mapper, notifier, data, pdu);
+    processor.process(grid, notifier, std::move(data), pdu);
   }
 
 private:

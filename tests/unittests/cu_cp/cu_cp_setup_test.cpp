@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -202,6 +202,13 @@ TEST_F(cu_cp_setup_test, when_rrc_setup_completes_then_initial_message_sent_to_a
       generate_ul_rrc_message_transfer(cu_ue_id.value(), du_ue_f1ap_id, srb_id_t::srb1, generate_rrc_setup_complete());
   test_logger.info("Injecting UL RRC message (RRC Setup Complete)");
   get_du(du_idx).push_ul_pdu(ul_rrc_msg);
+
+  // Check that the UE is in the RRC connections of the metrics report.
+  report = this->get_cu_cp().get_metrics_handler().request_metrics_report();
+  ASSERT_FALSE(report.dus.empty());
+  ASSERT_FALSE(report.ues.empty());
+  ASSERT_EQ(report.dus[0].rrc_metrics.mean_nof_rrc_connections, 1);
+  ASSERT_EQ(report.dus[0].rrc_metrics.max_nof_rrc_connections, 1);
 
   // Verify AMF is notified of UE attach.
   ASSERT_TRUE(this->wait_for_ngap_tx_pdu(ngap_pdu));

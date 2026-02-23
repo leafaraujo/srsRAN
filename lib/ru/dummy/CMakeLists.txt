@@ -1,5 +1,5 @@
 #
-# Copyright 2021-2024 Software Radio Systems Limited
+# Copyright 2021-2025 Software Radio Systems Limited
 #
 # This file is part of srsRAN
 #
@@ -20,7 +20,8 @@
 
 set(SOURCES
         ru_dummy_factory.cpp
-        ru_dummy_impl.cpp)
+        ru_dummy_impl.cpp
+        ru_dummy_metrics_collector.cpp)
 
 add_library(srsran_ru_dummy STATIC ${SOURCES})
 target_link_libraries(srsran_ru_dummy srslog)

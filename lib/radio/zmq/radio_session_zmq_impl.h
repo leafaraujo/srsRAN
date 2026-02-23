@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -68,7 +68,7 @@ public:
   bool is_successful() const { return successful; }
 
   // See interface for documentation.
-  radio_management_plane& get_management_plane() override { return *this; };
+  radio_management_plane& get_management_plane() override { return *this; }
 
   // See interface for documentation.
   baseband_gateway& get_baseband_gateway(unsigned stream_id) override

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -72,7 +72,11 @@ prach_scheduler::prach_scheduler(const cell_configuration& cfg_) :
     const unsigned prach_nof_prbs =
         prach_frequency_mapping_get(info.scs, cell_cfg.ul_cfg_common.init_ul_bwp.generic_params.scs).nof_rb_ra;
     // This is the start of the PRBs dedicated to PRACH.
-    const uint8_t      prb_start = rach_cfg_common().rach_cfg_generic.msg1_frequency_start + id_fd_ra * prach_nof_prbs;
+    const uint8_t prb_start = rach_cfg_common().rach_cfg_generic.msg1_frequency_start + id_fd_ra * prach_nof_prbs;
+    // NOTE: prach_to_pusch_guardband is added to every PRACH occasion, but only at the end of it. We don't consider the
+    // prach_to_pusch_guardband to compute the next PRACH occasion starting_PRB; the purpose of this guardband is to
+    // avoid overlapping with PUSCH (placed on the PRBs with higher index compared to the PRACH occasion) when we fill
+    // the resource grid.
     const prb_interval prach_prbs{prb_start, prb_start + prach_nof_prbs + prach_to_pusch_guardband};
     const crb_interval crbs = prb_to_crb(cell_cfg.ul_cfg_common.init_ul_bwp.generic_params, prach_prbs);
 
@@ -118,13 +122,8 @@ prach_scheduler::prach_scheduler(const cell_configuration& cfg_) :
     // We assume all the preambles from 0 to 64 are assigned to the same PRACH occasion.
     // TODO: adapt scheduler to difference preamble indices intervals.
     cached_prach.occasion.start_preamble_index = 0;
-    if (cell_cfg.ul_cfg_common.init_ul_bwp.rach_cfg_common->total_nof_ra_preambles.has_value()) {
-      cached_prach.occasion.nof_preamble_indexes =
-          cell_cfg.ul_cfg_common.init_ul_bwp.rach_cfg_common->total_nof_ra_preambles.value();
-    } else {
-      // If the field is absent, all possible preambles are available for RA.
-      cached_prach.occasion.nof_preamble_indexes = MAX_NOF_PRACH_PREAMBLES;
-    }
+    cached_prach.occasion.nof_preamble_indexes =
+        cell_cfg.ul_cfg_common.init_ul_bwp.rach_cfg_common->total_nof_ra_preambles;
   }
 }
 

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -97,7 +97,7 @@ public:
     return nullptr;
   }
 
-  std::vector<ofdm_symbol_demodulator_spy*>& get_demodulators() { return demodulators; };
+  std::vector<ofdm_symbol_demodulator_spy*>& get_demodulators() { return demodulators; }
 
 private:
   std::vector<ofdm_symbol_demodulator_spy*> demodulators;

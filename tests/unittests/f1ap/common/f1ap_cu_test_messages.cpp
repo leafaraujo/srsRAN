@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -21,6 +21,7 @@
  */
 
 #include "f1ap_cu_test_messages.h"
+#include "lib/f1ap/asn1_helpers.h"
 #include "srsran/asn1/f1ap/common.h"
 #include "srsran/asn1/f1ap/f1ap_pdu_contents.h"
 #include "srsran/f1ap/cu_cp/f1ap_cu_ue_context_update.h"
@@ -245,7 +246,7 @@ f1ap_ue_context_modification_request srsran::srs_cu_cp::generate_ue_context_modi
   // qos characteristics
   non_dyn_5qi_descriptor non_dyn_5qi;
   non_dyn_5qi.five_qi                                 = uint_to_five_qi(8);
-  non_dyn_5qi.qos_prio_level                          = uint_to_qos_prio_level(1);
+  non_dyn_5qi.qos_prio_level                          = qos_prio_level_t{1};
   non_dyn_5qi.averaging_win                           = 3;
   non_dyn_5qi.max_data_burst_volume                   = 1000;
   drbs_to_be_setup_mod_item.qos_info.drb_qos.qos_desc = non_dyn_5qi;
@@ -268,8 +269,8 @@ f1ap_ue_context_modification_request srsran::srs_cu_cp::generate_ue_context_modi
   drbs_to_be_setup_mod_item.qos_info.drb_qos.reflective_qos_attribute_subject_to = true;
 
   // s nssai
-  drbs_to_be_setup_mod_item.qos_info.s_nssai.sst = 1;
-  drbs_to_be_setup_mod_item.qos_info.s_nssai.sd  = 128;
+  drbs_to_be_setup_mod_item.qos_info.s_nssai.sst = slice_service_type{1};
+  drbs_to_be_setup_mod_item.qos_info.s_nssai.sd  = slice_differentiator::create(128).value();
 
   // notif ctrl
   drbs_to_be_setup_mod_item.qos_info.notif_ctrl = drb_notification_control::active;
@@ -478,4 +479,42 @@ cu_cp_paging_message srsran::srs_cu_cp::generate_paging_message()
   paging_msg.assist_data_for_paging = assist_data_for_paging;
 
   return paging_msg;
+}
+
+f1ap_message srsran::srs_cu_cp::generate_gnb_cu_configuration_update_failure()
+{
+  f1ap_message gnb_cu_configuration_update_failure = {};
+
+  gnb_cu_configuration_update_failure.pdu.set_unsuccessful_outcome();
+  gnb_cu_configuration_update_failure.pdu.unsuccessful_outcome().load_info_obj(ASN1_F1AP_ID_GNB_CU_CFG_UPD);
+
+  auto& gnb_cu_cfg_upd_fail =
+      gnb_cu_configuration_update_failure.pdu.unsuccessful_outcome().value.gnb_cu_cfg_upd_fail();
+  gnb_cu_cfg_upd_fail->cause.set_radio_network();
+  gnb_cu_cfg_upd_fail->cause.radio_network() = cause_radio_network_opts::options::interaction_with_other_proc;
+
+  return gnb_cu_configuration_update_failure;
+}
+
+f1ap_message srsran::srs_cu_cp::generate_gnb_cu_configuration_update_acknowledgement(
+    const std::vector<f1ap_cell_failed_to_activate>& cells_failed_to_activate)
+{
+  f1ap_message gnb_cu_configuration_update_ack = {};
+
+  gnb_cu_configuration_update_ack.pdu.set_successful_outcome();
+  gnb_cu_configuration_update_ack.pdu.successful_outcome().load_info_obj(ASN1_F1AP_ID_GNB_CU_CFG_UPD);
+
+  auto& gnb_cu_cfg_upd_ack = gnb_cu_configuration_update_ack.pdu.successful_outcome().value.gnb_cu_cfg_upd_ack();
+
+  for (const auto& cell : cells_failed_to_activate) {
+    asn1::protocol_ie_single_container_s<asn1::f1ap::cells_failed_to_be_activ_list_item_ies_o> asn1_cell_container;
+    cells_failed_to_be_activ_list_item_s& asn1_cell = asn1_cell_container->cells_failed_to_be_activ_list_item();
+
+    asn1_cell.nr_cgi = cgi_to_asn1(cell.cgi);
+    asn1_cell.cause  = cause_to_asn1(cell.cause);
+
+    gnb_cu_cfg_upd_ack->cells_failed_to_be_activ_list.push_back(asn1_cell_container);
+  }
+
+  return gnb_cu_configuration_update_ack;
 }

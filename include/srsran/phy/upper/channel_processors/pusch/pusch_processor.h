@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -24,15 +24,12 @@
 
 #include "srsran/adt/expected.h"
 #include "srsran/adt/static_vector.h"
-#include "srsran/phy/support/re_pattern.h"
-#include "srsran/phy/upper/channel_coding/ldpc/ldpc.h"
 #include "srsran/phy/upper/dmrs_mapping.h"
 #include "srsran/phy/upper/rb_allocation.h"
-#include "srsran/phy/upper/rx_buffer.h"
 #include "srsran/ran/pusch/pusch_context.h"
+#include "srsran/ran/sch/ldpc_base_graph.h"
 #include "srsran/ran/sch/sch_mcs.h"
 #include "srsran/ran/slot_point.h"
-#include "srsran/ran/uci/uci_constants.h"
 #include "srsran/ran/uci/uci_part2_size_description.h"
 #include <variant>
 
@@ -144,7 +141,7 @@ public:
     unsigned n_id;
     /// Number of transmission layers as per TS38.211 Section 6.3.1.3.
     unsigned nof_tx_layers;
-    /// Port indexes the PUSCH reception is mapped to.
+    /// Port indices the PUSCH reception is mapped to.
     static_vector<uint8_t, MAX_PORTS> rx_ports;
     /// Indicates which symbol in the slot transmit DMRS.
     symbol_slot_mask dmrs_symbol_mask;

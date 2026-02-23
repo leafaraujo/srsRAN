@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -22,10 +22,14 @@
 
 #pragma once
 
+#include "mobility_management_metrics.h"
+#include "srsran/ngap/ngap_metrics.h"
 #include "srsran/ran/gnb_du_id.h"
 #include "srsran/ran/nr_cgi.h"
 #include "srsran/ran/pci.h"
 #include "srsran/ran/rnti.h"
+#include "srsran/rrc/rrc_metrics.h"
+#include "srsran/rrc/rrc_ue.h"
 #include <chrono>
 #include <memory>
 
@@ -41,19 +45,26 @@ struct metrics_report {
     gnb_du_id_t du_id;
     /// PCI of the UE's PCell.
     pci_t pci;
+    /// RRC connection state of the UE.
+    rrc_state rrc_connection_state;
   };
   struct cell_info {
     nr_cell_global_id_t cgi;
     pci_t               pci;
   };
+
   struct du_info {
     /// ID of the DU connected to the CU-CP.
     gnb_du_id_t            id;
     std::vector<cell_info> cells;
+
+    rrc_du_metrics rrc_metrics;
   };
 
-  std::vector<ue_info> ues;
-  std::vector<du_info> dus;
+  std::vector<ue_info>        ues;
+  std::vector<du_info>        dus;
+  std::vector<ngap_info>      ngaps;
+  mobility_management_metrics mobility;
 };
 
 /// Interface used by the CU-CP to report metrics.

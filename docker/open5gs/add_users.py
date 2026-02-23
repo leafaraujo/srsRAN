@@ -9,9 +9,8 @@ import sys
 from misc.db.python.Open5GS import Open5GS
 
 
-def add_user(imsi, key="FEC86BA6EB707ED08905757B1BB44B8F", op=None,
-             opc="C42449363BBAD02B66D16BC975D77CC1", amf="8000", 
-             apn="lance", qci="5", ip_alloc="", sst=1, sd="000001"):
+def add_user(imsi, key="00112233445566778899aabbccddeeff", op=None,
+             opc="63bfa50ee6523365ff14c1f45f88737d", amf="9001", apn="srsapn", qci="9", ip_alloc=""):
     '''Add UE data to Open5GS mongodb'''
 
     if op is not None:
@@ -19,26 +18,28 @@ def add_user(imsi, key="FEC86BA6EB707ED08905757B1BB44B8F", op=None,
 
     slice_data = [
         {
-            "sst": int(sst),
-            "sd": sd,
+            "sst": 1,
             "default_indicator": True,
             "session": [
                 {
                     "name": apn,
-                    "type": 3, 
-                    "pcc_rule": [], 
-                    "ambr": {"uplink": {"value": 1, "unit": 3}, 
-                            "downlink": {"value": 1, "unit": 3}},
+                    "type": 3, "pcc_rule": [], "ambr": {"uplink": {"value": 1, "unit": 3}, "downlink": {"value": 1, "unit": 3}},
                     "qos": {
                         "index": int(qci),
-                        "arp": {"priority_level": 1, 
-                               "pre_emption_capability": 1, 
-                               "pre_emption_vulnerability": 1}
+                        "arp": {"priority_level": 8, "pre_emption_capability": 1, "pre_emption_vulnerability": 1}
                     },
                     "ue": {
                         "ipv4": ip_alloc
                     }
                 },
+                {
+                    "name": "ims",
+                    "type": 3, "pcc_rule": [], "ambr": {"uplink": {"value": 1, "unit": 3}, "downlink": {"value": 1, "unit": 3}},
+                    "qos": {
+                        "index": 5,
+                        "arp": {"priority_level": 8, "pre_emption_capability": 1, "pre_emption_vulnerability": 1}
+                    }
+                }
             ]
         }
     ]
@@ -50,8 +51,7 @@ def add_user(imsi, key="FEC86BA6EB707ED08905757B1BB44B8F", op=None,
         "subscriber_status": 0,
         "access_restriction_data": 32,
         "slice": slice_data,
-        "ambr": {"uplink": {"value": 1, "unit": 3}, 
-                "downlink": {"value": 1, "unit": 3}},
+        "ambr": {"uplink": {"value": 1, "unit": 3}, "downlink": {"value": 1, "unit": 3}},
         "security": {
             "k": key,
             "amf": amf,
@@ -69,55 +69,30 @@ def read_from_db(db_file):
     '''Read UE data from a subscriber db csv-file.'''
     subscriber_db = []
     try:
-        with open(db_file, "r") as f:
-            for line in f:
-                line = line.strip()
-                if not line or line.startswith("#"):
-                    continue
-                
-                # Split the line and handle optional fields
-                parts = line.split(',')
-                if len(parts) < 8:
-                    print(f"Error: Line doesn't have enough fields: {line}")
-                    continue
-                    
-                # Extract required fields
-                name = parts[0]
-                imsi = parts[1]
-                key = parts[2]
-                op_type = parts[3]
-                op_c = parts[4]
-                amf = parts[5]
-                qci = parts[6]
-                ip_alloc = parts[7]
-                
-                # Extract optional fields with defaults
-                apn = parts[8] if len(parts) > 8 else "internet"
-                sst = parts[9] if len(parts) > 9 else "1"
-                sd = parts[10] if len(parts) > 10 else "000001"
-                
-                opc = op_c
-                op = None
-                if op_type == "op":
-                    op = op_c
-                    opc = None
-
-                subscriber_db.append({
-                    "imsi": imsi, 
-                    "key": key, 
-                    "op": op,
-                    "opc": opc, 
-                    "amf": amf, 
-                    "qci": qci, 
-                    "ip_alloc": ip_alloc,
-                    "apn": apn,
-                    "sst": sst,
-                    "sd": sd
-                })
-                
-    except Exception as e:
+        db_file = open(db_file, "r")
+    except FileNotFoundError as e:
         print(f"Error reading subscriber_db.csv: {e}")
         return None
+
+    for line in db_file:
+        if line.startswith("#"):
+            pass
+        else:
+            try:
+                name, imsi, key, op_type, op_c, amf, qci, ip_alloc = line.split(
+                    ',')
+            except ValueError as e:
+                print(f"Error reading subscriber_db.csv: {e}")
+                return None
+
+            opc = op_c
+            op = None
+            if op_type == "op":
+                op = op_c
+                opc = None
+
+            subscriber_db.append({"imsi": imsi, "key": key, "op": op,
+                                  "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip()})
 
     return subscriber_db
 
@@ -125,51 +100,26 @@ def read_from_db(db_file):
 def read_from_string(sub_data):
     '''
     Read UE data from subscriber data string.
-    Example string: "001010123456780,FEC86BA6EB707ED08905757B1BB44B8F,opc,C42449363BBAD02B66D16BC975D77CC1,8000,9,10.45.1.2,lance,1,000001"
+    Example string: "001010123456780,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,9,10.45.1.2"
     '''
+
     subscriber_db = []
 
     try:
-        parts = sub_data.split(',')
-        if len(parts) < 8:
-            print(f"Error: String doesn't have enough fields: {sub_data}")
-            return None
-            
-        imsi = parts[0]
-        key = parts[1]
-        op_type = parts[2]
-        op_c = parts[3]
-        amf = parts[4]
-        qci = parts[5]
-        ip_alloc = parts[6]
-        
-        # Optional fields with defaults
-        apn = parts[7] if len(parts) > 7 else "lance"
-        sst = parts[8] if len(parts) > 8 else "1"
-        sd = parts[9] if len(parts) > 9 else "000001"
-
-        opc = op_c
-        op = None
-        if op_type == "op":
-            op = op_c
-            opc = None
-
-        subscriber_db.append({
-            "imsi": imsi, 
-            "key": key, 
-            "op": op,
-            "opc": opc, 
-            "amf": amf, 
-            "qci": qci, 
-            "ip_alloc": ip_alloc,
-            "apn": apn,
-            "sst": sst,
-            "sd": sd
-        })
-
-    except Exception as e:
+        imsi, key, op_type, op_c, amf, qci, ip_alloc = sub_data.split(
+            ',')
+    except ValueError as e:
         print(f"Error reading subscriber string: {e}")
         return None
+
+    opc = op_c
+    op = None
+    if op_type == "op":
+        op = op_c
+        opc = None
+
+    subscriber_db.append({"imsi": imsi, "key": key, "op": op,
+                          "opc": opc, "amf": amf, "qci": qci, "ip_alloc": ip_alloc.rstrip()})
 
     return subscriber_db
 
@@ -177,8 +127,9 @@ def read_from_string(sub_data):
 @click.command()
 @click.option("--mongodb", default="127.0.0.1", help="IP address or hostname of the mongodb instance.")
 @click.option("--mongodb_port", default=27017, help="Port to connect to the mongodb instance.")
-@click.option("--subscriber_data", default="001010123456780,FEC86BA6EB707ED08905757B1BB44B8F,opc,C42449363BBAD02B66D16BC975D77CC1,8000,9,10.45.1.2,internet,1,000001", help="Single subscriber data string or full path to subscriber data csv-file.")
+@click.option("--subscriber_data", default="001010123456780,00112233445566778899aabbccddeeff,opc,63bfa50ee6523365ff14c1f45f88737d,8000,9,10.45.1.2", help="Single subscriber data string or full path to subscriber data csv-file.")
 def main(mongodb, mongodb_port, subscriber_data):
+
     open5gs_client = Open5GS(mongodb, mongodb_port)
 
     if subscriber_data.endswith(".csv"):
@@ -194,10 +145,12 @@ def main(mongodb, mongodb_port, subscriber_data):
     for ue in subscriber_db:
         try:
             sub_data = add_user(**ue)
+            # Add Subscriber using dict of sub_data
             print(open5gs_client.AddSubscriber(sub_data))
         except pymongo.errors.DuplicateKeyError:
             print(f"UE (IMSI={ue['imsi']}) already exists, updating it.")
             sub_data = add_user(**ue)
+            # Update Subscriber using dict of sub_data
             print(open5gs_client.UpdateSubscriber(ue['imsi'], sub_data))
 
 

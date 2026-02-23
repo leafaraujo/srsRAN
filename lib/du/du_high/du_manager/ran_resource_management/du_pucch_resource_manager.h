@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,7 @@
 #pragma once
 
 #include "du_ue_resource_config.h"
-#include "pucch_resource_generator.h"
+#include "srsran/scheduler/config/pucch_resource_generator.h"
 #include <set>
 
 namespace srsran {

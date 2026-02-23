@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -40,6 +40,12 @@ public:
 
   // See interface for documentation.
   void on_late_downlink_message(slot_point dl_frame_slot) override;
+
+  // See interface for documentation.
+  void on_late_uplink_message(slot_point ul_frame_slot) override;
+
+  // See interface for documentation.
+  void on_late_prach_message(slot_point prach_msg_slot) override;
 
   /// Configures the FAPI slot-based, error-specific notifier to the given one.
   void set_slot_error_message_notifier(fapi::slot_error_message_notifier& fapi_error_notifier)

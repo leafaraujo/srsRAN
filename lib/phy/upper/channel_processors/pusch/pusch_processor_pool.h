@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "srsran/adt/concurrent_queue.h"
+#include "srsran/adt/mpmc_queue.h"
 #include "srsran/phy/upper/channel_processors/pusch/formatters.h"
 #include "srsran/phy/upper/channel_processors/pusch/pusch_processor.h"
 #include "srsran/srslog/logger.h"
@@ -165,7 +165,7 @@ public:
     }
 
     // Process pusch.
-    processors[index.value()].process(data, std::move(rm_buffer), notifier, grid, pdu);
+    processors[*index].process(data, std::move(rm_buffer), notifier, grid, pdu);
   }
 
 private:

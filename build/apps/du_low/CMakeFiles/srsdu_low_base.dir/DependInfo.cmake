@@ -1,0 +1,80 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
+# The set of languages for which implicit dependencies are needed:
+set(CMAKE_DEPENDS_LANGUAGES
+  )
+
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/lance/srsRAN/apps/du_low/du_low_appconfig_cli11_schema.cpp" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_cli11_schema.cpp.o" "gcc" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_cli11_schema.cpp.o.d"
+  "/home/lance/srsRAN/apps/du_low/du_low_appconfig_translators.cpp" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_translators.cpp.o" "gcc" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_translators.cpp.o.d"
+  "/home/lance/srsRAN/apps/du_low/du_low_appconfig_validators.cpp" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_validators.cpp.o" "gcc" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_validators.cpp.o.d"
+  "/home/lance/srsRAN/apps/du_low/du_low_appconfig_yaml_writer.cpp" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_yaml_writer.cpp.o" "gcc" "apps/du_low/CMakeFiles/srsdu_low_base.dir/du_low_appconfig_yaml_writer.cpp.o.d"
+  )
+
+# Targets to which this target links.
+set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/lance/srsRAN/build/lib/support/CMakeFiles/srsran_support.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/support/versioning/CMakeFiles/srsran_versioning.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/e2/CMakeFiles/srsran_e2_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/f1u/CMakeFiles/srsran_f1u_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/hal/CMakeFiles/srsran_hal_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/logger/CMakeFiles/srsran_logger_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/network/CMakeFiles/srsran_network_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/buffer_pool/CMakeFiles/srsran_buffer_pool_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/cmdline/CMakeFiles/srsran_cmdline_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/metrics/CMakeFiles/srsran_metrics_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/remote_control/CMakeFiles/srsran_remote_control_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/external/uWebSockets/uSockets/CMakeFiles/uSockets.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/app_resource_usage/CMakeFiles/srsran_resource_usage_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/helpers/metrics/CMakeFiles/srsran_metrics_app_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/worker_manager/CMakeFiles/srsran_worker_manager_app_service.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/apps/services/worker_manager/CMakeFiles/srsran_cpu_affinities_helper.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/CMakeFiles/srsran_du_high.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/test_mode/CMakeFiles/srsran_du_high_adapters.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/CMakeFiles/srsran_du_manager.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/du_ue/CMakeFiles/du_ue.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/procedures/CMakeFiles/srsran_du_manager_procedures.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/rlc/CMakeFiles/srsran_rlc.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/mac/CMakeFiles/srsran_mac.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/ran_resource_management/CMakeFiles/du_resource_manager.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/converters/CMakeFiles/du_manager_converters.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/CMakeFiles/srsran_du_config_validators.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/scheduler/CMakeFiles/srsran_sched.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/scheduler/config/CMakeFiles/sched_config.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/scheduler/logging/CMakeFiles/scheduler_logger.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/mac/CMakeFiles/mac_configuration_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/du/du_high/du_manager/cbs/CMakeFiles/srsran_cbs_encoder.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/scheduler/ue_context/CMakeFiles/sched_ue_context.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/scheduler/support/CMakeFiles/sched_support.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/ran/CMakeFiles/srsran_ran.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/pcap/CMakeFiles/srsran_pcap.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/asn1/rrc_nr/CMakeFiles/rrc_nr_asn1.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1ap/du/CMakeFiles/srsran_f1ap_du.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1u/CMakeFiles/srsran_f1u_du.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1ap/du/procedures/CMakeFiles/srsran_f1ap_du_procedures.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1ap/CMakeFiles/srsran_f1ap_common.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1ap/du/CMakeFiles/srsran_f1ap_du_helpers.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/asn1/CMakeFiles/f1ap_asn1.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/cu_up/CMakeFiles/srsran_cu_up.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/e1ap/cu_up/CMakeFiles/srsran_e1ap_cu_up.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/e1ap/common/CMakeFiles/srsran_e1ap_common.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/gtpu/CMakeFiles/srsran_gtpu.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/nru/CMakeFiles/srsran_nru.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/psup/CMakeFiles/srsran_psup.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/pdcp/CMakeFiles/srsran_pdcp.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/instrumentation/CMakeFiles/srsran_instrumentation.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/f1u/CMakeFiles/srsran_f1u_cu_up.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/gateways/CMakeFiles/srsran_gateway.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/asn1/CMakeFiles/e1ap_asn1.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/asn1/CMakeFiles/asn1_utils.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/srslog/CMakeFiles/srslog.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/external/fmt/CMakeFiles/fmt.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/sdap/CMakeFiles/srsran_sdap.dir/DependInfo.cmake"
+  "/home/lance/srsRAN/build/lib/security/CMakeFiles/srsran_security.dir/DependInfo.cmake"
+  )
+
+# Fortran module output directory.
+set(CMAKE_Fortran_TARGET_MODULE_DIR "")

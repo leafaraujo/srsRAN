@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,6 @@
 #pragma once
 
 #include "srsran/ran/qos/five_qi.h"
-#include "srsran/ran/qos/five_qi_qos_mapping.h"
 #include "srsran/ran/qos/packet_error_rate.h"
 #include "srsran/ran/qos/qos_prio_level.h"
 #include <optional>

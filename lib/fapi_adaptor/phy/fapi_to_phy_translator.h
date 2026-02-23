@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -22,14 +22,19 @@
 
 #pragma once
 
-#include "srsran/fapi/messages.h"
+#include "srsran/fapi/messages/config_request_tlvs.h"
+#include "srsran/fapi/messages/dl_tti_request.h"
+#include "srsran/fapi/messages/tx_data_request.h"
+#include "srsran/fapi/messages/ul_dci_request.h"
+#include "srsran/fapi/messages/ul_tti_request.h"
 #include "srsran/fapi/slot_error_message_notifier.h"
 #include "srsran/fapi/slot_message_gateway.h"
 #include "srsran/fapi_adaptor/precoding_matrix_repository.h"
 #include "srsran/fapi_adaptor/uci_part2_correspondence_repository.h"
 #include "srsran/phy/upper/channel_processors/pdsch/pdsch_processor.h"
+#include "srsran/phy/upper/downlink_processor.h"
+#include "srsran/phy/upper/uplink_pdu_slot_repository.h"
 #include "srsran/srslog/logger.h"
-#include "srsran/support/executors/task_executor.h"
 #include <atomic>
 
 namespace srsran {
@@ -40,7 +45,7 @@ class downlink_processor_pool;
 class resource_grid_pool;
 class uplink_pdu_validator;
 class uplink_request_processor;
-class uplink_slot_pdu_repository;
+class uplink_pdu_slot_repository;
 
 namespace fapi_adaptor {
 
@@ -50,14 +55,16 @@ struct fapi_to_phy_translator_config {
   unsigned sector_id;
   /// Request headroom size in slots.
   unsigned nof_slots_request_headroom;
+  /// Allows to request uplink on empty UL_TTI.request.
+  bool allow_request_on_empty_ul_tti;
   /// Subcarrier spacing as per TS38.211 Section 4.2.
   subcarrier_spacing scs;
   /// Common subcarrier spacing as per TS38.331 Section 6.2.2.
   subcarrier_spacing scs_common;
   /// FAPI PRACH configuration TLV as per SCF-222 v4.0 section 3.3.2.4.
-  const fapi::prach_config* prach_cfg;
+  fapi::prach_config prach_cfg;
   /// FAPI carrier configuration TLV as per SCF-222 v4.0 section 3.3.2.4.
-  const fapi::carrier_config* carrier_cfg;
+  fapi::carrier_config carrier_cfg;
   /// PRACH port list.
   std::vector<uint8_t> prach_ports;
 };
@@ -74,10 +81,8 @@ struct fapi_to_phy_translator_dependencies {
   const downlink_pdu_validator* dl_pdu_validator;
   /// Uplink request processor.
   uplink_request_processor* ul_request_processor;
-  /// Uplink resource grid pool.
-  resource_grid_pool* ul_rg_pool;
   /// Uplink slot PDU repository.
-  uplink_slot_pdu_repository* ul_pdu_repository;
+  uplink_pdu_slot_repository_pool* ul_pdu_repository;
   /// Uplink PDU validator.
   const uplink_pdu_validator* ul_pdu_validator;
   /// Precoding matrix repository.
@@ -111,11 +116,11 @@ class fapi_to_phy_translator : public fapi::slot_message_gateway
   /// \note The lifetime of any instantiation of this class is meant to be a single slot.
   class slot_based_upper_phy_controller
   {
-    slot_point                                 slot;
-    std::reference_wrapper<downlink_processor> dl_processor;
+    slot_point                slot;
+    unique_downlink_processor dl_processor;
 
   public:
-    slot_based_upper_phy_controller();
+    slot_based_upper_phy_controller() = default;
 
     slot_based_upper_phy_controller(downlink_processor_pool& dl_processor_pool,
                                     resource_grid_pool&      rg_pool,
@@ -130,8 +135,6 @@ class fapi_to_phy_translator : public fapi::slot_message_gateway
 
     /// Overloaded member of pointer operator.
     downlink_processor* operator->() { return &dl_processor.get(); }
-    /// Overloaded member of pointer operator.
-    const downlink_processor* operator->() const { return &dl_processor.get(); }
   };
 
   /// Manages slot based controllers.
@@ -239,14 +242,14 @@ private:
   /// Returns this adaptor current slot.
   slot_point get_current_slot() const
   {
-    return slot_point(scs, current_slot_count_val.load(std::memory_order_acquire));
+    return slot_point(scs, current_slot_count_val.load(std::memory_order_relaxed));
   }
 
   /// Updates this adaptor current slot to the given value.
   void update_current_slot(slot_point slot)
   {
     // Update the atomic variable that holds the slot point.
-    current_slot_count_val.store(slot.system_slot(), std::memory_order_release);
+    current_slot_count_val.store(slot.system_slot(), std::memory_order_relaxed);
   }
 
 private:
@@ -254,18 +257,18 @@ private:
   const unsigned sector_id;
   /// Request headroom size in slots.
   const unsigned nof_slots_request_headroom;
+  /// Allows to request uplink on empty UL_TTI.request.
+  const bool allow_request_on_empty_ul_tti;
   /// Logger.
   srslog::basic_logger& logger;
   /// Downlink PDU validator.
   const downlink_pdu_validator& dl_pdu_validator;
   /// Uplink request processor.
   uplink_request_processor& ul_request_processor;
-  /// Uplink resource grid pool.
-  resource_grid_pool& ul_rg_pool;
   /// Uplink PDU validator.
   const uplink_pdu_validator& ul_pdu_validator;
   /// Uplink slot PDU repository.
-  uplink_slot_pdu_repository& ul_pdu_repository;
+  uplink_pdu_slot_repository_pool& ul_pdu_repository;
   /// Current slot count value.
   std::atomic<uint32_t> current_slot_count_val;
   /// Slot controller manager.

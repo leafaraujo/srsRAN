@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -162,7 +162,7 @@ static void pdcch_conversion_benchmark()
     builder_dci.set_parameters_v4_dci(nid_dmrs_dist(gen));
 
     pdcch_processor::pdu_t             proc_pdu;
-    auto                               pm_tools = generate_precoding_matrix_tables(1);
+    auto                               pm_tools = generate_precoding_matrix_tables(1, 0);
     const precoding_matrix_repository& pm_repo  = *std::get<std::unique_ptr<precoding_matrix_repository>>(pm_tools);
 
     // Conversion block.

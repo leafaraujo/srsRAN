@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,6 @@
 #include "../../../lib/fapi/validators/dl_pdsch_pdu.h"
 #include "../message_builder_helpers.h"
 #include "helpers.h"
-#include "srsran/fapi/message_validators.h"
 
 using namespace srsran;
 using namespace fapi;

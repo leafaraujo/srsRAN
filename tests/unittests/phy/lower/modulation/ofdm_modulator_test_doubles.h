@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -100,7 +100,7 @@ public:
     return nullptr;
   }
 
-  std::vector<ofdm_symbol_modulator_spy*>& get_modulators() { return modulators; };
+  std::vector<ofdm_symbol_modulator_spy*>& get_modulators() { return modulators; }
 };
 
 } // namespace srsran

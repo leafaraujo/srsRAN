@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,6 @@
 #pragma once
 
 #include "srs_resource_generator.h"
-#include "srsran/adt/optional.h"
 #include "srsran/du/du_cell_config.h"
 #include "srsran/ran/srs/srs_bandwidth_configuration.h"
 
@@ -107,8 +106,9 @@ private:
 
     // Maximum number of SRS resources that can be generated in a cell.
     // [Implementation-defined] We assume each UE has one and only one resource.
-    static const unsigned max_nof_srs_res = MAX_NOF_DU_UES;
-    const du_cell_config& cell_cfg;
+    static const unsigned                        max_nof_srs_res = MAX_NOF_DU_UES;
+    const du_cell_config&                        cell_cfg;
+    const std::optional<tdd_ul_dl_config_common> tdd_ul_dl_cfg_common;
     // Default SRS configuration for the cell.
     const srs_config default_srs_cfg;
     srs_cell_common  srs_common_params;

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2021-2024 Software Radio Systems Limited
+ * Copyright 2021-2025 Software Radio Systems Limited
  *
  * This file is part of srsRAN.
  *
@@ -23,7 +23,6 @@
 #include "radio_uhd_impl.h"
 #include "radio_uhd_device.h"
 #include <thread>
-
 #include <uhd/utils/thread_priority.h>
 
 using namespace srsran;
@@ -241,7 +240,7 @@ radio_session_uhd_impl::radio_session_uhd_impl(const radio_configuration::radio&
   }
 
   unsigned total_tx_channel_count = 0;
-  for (const radio_configuration::stream& stream_config : radio_config.rx_streams) {
+  for (const radio_configuration::stream& stream_config : radio_config.tx_streams) {
     total_tx_channel_count += stream_config.channels.size();
   }
 
