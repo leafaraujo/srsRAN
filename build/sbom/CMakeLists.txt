@@ -1,6 +1,0 @@
-install(SCRIPT /home/lance/srsRAN/build/SPDXRef-mbedTLS.cmake)
-install(SCRIPT /home/lance/srsRAN/build/SPDXRef-FFTW3.cmake)
-install(SCRIPT /home/lance/srsRAN/build/SPDXRef-UHD.cmake)
-install(SCRIPT /home/lance/srsRAN/build/SPDXRef-yaml-cpp.cmake)
-install(SCRIPT /home/lance/srsRAN/build/sbom/LicenseRef-srsRAN.cmake)
-install(SCRIPT verify.cmake)
